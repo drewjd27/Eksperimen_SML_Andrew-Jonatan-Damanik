@@ -1,0 +1,40 @@
+name: "Preprocess Penguins Dataset"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.7"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run preprocessing script
+        run: |
+          python preprocessing/automate_Andrew-Jonatan-Damanik.py
+
+      - name: List preprocessing outputs
+        run: ls preprocessing/
+
+      - name: Upload preprocessed datasets as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: penguins_preprocessed
+          path: |
+            preprocessing/penguins_train_preprocessing.csv
+            preprocessing/penguins_test_preprocessing.csv
